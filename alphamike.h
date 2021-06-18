@@ -1,15 +1,18 @@
+#include<stdio.h>
+#include<iostream>
 #include<vector>
+#include<algorithm>
 #ifndef ALPHAMIKE_H
 #define ALPHAMIKE_H
 namespace am{
     class structure{
         private:
-            std::string name, decription;
+            std::string name, description;
             int amminNum;
         public:
             structure(){
-                name = NULL;
-                description = NULL;
+                name = "";
+                description = "";
                 amminNum = -1;
             };
             structure(const std::string name_, const std::string desc_, const int num_){
@@ -18,18 +21,18 @@ namespace am{
                 amminNum = num_;
             };
             structure(const structure& str_){
-                name = str.name;
-                description = str.description;
-                amminNum = str.annimNum;
+                name = str_.name;
+                description = str_.description;
+                amminNum = str_.amminNum;
             };
             std::string GetName() const{
-                return this -> name
+                return name;
             };
             std::string GetDesc() const{
-                return this -> description
+                return description;
             };
             int GetNum() const{
-                return this -> amminNum
+                return amminNum;
             };
     };
     class pData{
@@ -38,7 +41,7 @@ namespace am{
             std::vector<structure> str;
         public:
             pData(){
-                barcode = NULL;
+                barcode = "";
             };
             pData(const std::string barcode_, const std::vector<structure> str_){
                 barcode = barcode_;
@@ -49,10 +52,10 @@ namespace am{
                 str = pdat_.str;
             };
             std::string GetBarcode() const{
-                return this -> barcode
+                return barcode;
             };
             std::vector<structure> GetStructures() const{
-                return this -> str
+                return str;
             };
     };
 }

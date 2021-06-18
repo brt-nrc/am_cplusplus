@@ -7,6 +7,7 @@
 #include<algorithm>
 #include<sys/stat.h>
 #include<sys/types.h>
+#include"alphamike.h"
 
 int main(int argc, char *argv[]) {
  /*   TCLAP::CmdLine cmdArg("Command description message", ' ', "0.1");
