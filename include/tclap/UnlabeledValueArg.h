@@ -25,8 +25,8 @@
 #ifndef TCLAP_UNLABELED_VALUE_ARG_H
 #define TCLAP_UNLABELED_VALUE_ARG_H
 
-#include <OptionalUnlabeledTracker.h>
-#include <ValueArg.h>
+#include <tclap/OptionalUnlabeledTracker.h>
+#include <tclap/ValueArg.h>
 
 #include <list>
 #include <string>

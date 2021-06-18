@@ -24,8 +24,8 @@
 #ifndef TCLAP_CMD_LINE_OUTPUT_H
 #define TCLAP_CMD_LINE_OUTPUT_H
 
-#include <Arg.h>
-#include <ArgGroup.h>
+#include <tclap/Arg.h>
+#include <tclap/ArgGroup.h>
 
 #include <algorithm>
 #include <iomanip>

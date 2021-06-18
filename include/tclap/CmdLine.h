@@ -25,23 +25,23 @@
 #ifndef TCLAP_CMD_LINE_H
 #define TCLAP_CMD_LINE_H
 
-#include <MultiSwitchArg.h>
-#include <SwitchArg.h>
-#include <UnlabeledMultiArg.h>
-#include <UnlabeledValueArg.h>
+#include <tclap/MultiSwitchArg.h>
+#include <tclap/SwitchArg.h>
+#include <tclap/UnlabeledMultiArg.h>
+#include <tclap/UnlabeledValueArg.h>
 
-#include <HelpVisitor.h>
-#include <IgnoreRestVisitor.h>
-#include <VersionVisitor.h>
+#include <tclap/HelpVisitor.h>
+#include <tclap/IgnoreRestVisitor.h>
+#include <tclap/VersionVisitor.h>
 
-#include <CmdLineOutput.h>
-#include <StdOutput.h>
+#include <tclap/CmdLineOutput.h>
+#include <tclap/StdOutput.h>
 
-#include <Constraint.h>
-#include <ValuesConstraint.h>
+#include <tclap/Constraint.h>
+#include <tclap/ValuesConstraint.h>
 
-#include <ArgGroup.h>
-#include <DeferDelete.h>
+#include <tclap/ArgGroup.h>
+#include <tclap/DeferDelete.h>
 
 #include <algorithm>
 #include <cstdlib>

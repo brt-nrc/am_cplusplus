@@ -25,7 +25,7 @@
 #ifndef TCLAP_SWITCH_ARG_H
 #define TCLAP_SWITCH_ARG_H
 
-#include <Arg.h>
+#include <tclap/Arg.h>
 
 #include <string>
 #include <vector>

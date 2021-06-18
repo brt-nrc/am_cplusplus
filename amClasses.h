@@ -1,9 +1,12 @@
-#include<stdio.h>
-#include<iostream>
-#include<vector>
-#include<algorithm>
-#ifndef ALPHAMIKE_H
-#define ALPHAMIKE_H
+#include <stdio.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+#ifndef AM_CLASSES_H
+#define AM_CLASSES_H
 namespace am{
     class structure{
         private:

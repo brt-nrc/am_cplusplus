@@ -1,17 +1,27 @@
-#include<stdio.h>
-#include<iostream>
-#include <sstream>
-#include<fstream>
-#include<vector>
-#include<map>
-#include<algorithm>
-#include<sys/stat.h>
-#include<sys/types.h>
-#include"alphamike.h"
-#include"CmdLine.h"
+#include <stdio.h>
+#include <string>
+#include <vector>
+#include "amClasses.h"
+#include "amFunctions.h"
+#include "tclap/CmdLine.h"
 
-int main(int argc, char *argv[]) {
-   TCLAP::CmdLine cmdArg("Command description message", ' ', "0.1");
+int main(int argc, char** argv) {
+    /************************************************************************************************************************************
+     * Alpha Mike -> Allinamenti Mustang -> Mustang Alignments 
+     * 2021 - Enrico Bartolommei
+     * 
+     * Options:
+     * reqired:
+     *    OneOf: -i, --input_file : File with barcodes and corresponding sequences
+     *           -f, --description_file : Folder with description file as per MUSTANG's spec
+     *    -p, --path : path to .pdf files
+     *
+     * optional:
+     *    -t, --prefix : prefix to .pdb files
+     *    -s, --suffix : suffix to .pdb files
+     *    -q, --quiet : No standard terminal output
+     * **********************************************************************************************************************************/
+    TCLAP::CmdLine cmdArg("Command description message", ' ', "0.1");
     TCLAP::ValueArg<std::string> inputFileArg("i", "input_file", "File with barcodes", false, "", "filename");
     TCLAP::ValueArg<std::string> descriptionFolderArg("f", "description_files", "Folder with descriptor files", false, "", "folder path");
     TCLAP::OneOf inputArg;
@@ -22,12 +32,12 @@ int main(int argc, char *argv[]) {
     TCLAP::ValueArg<std::string> suffixArg("s", "suffix", "Suffix for .pdb files", false, "", "string", cmdArg);
     TCLAP::SwitchArg quietArg("q","quiet","Quiet operation", cmdArg, false);
 
-    std::string inputFile = NULL, descriptionFolder = NULL, pdbPath, pdbPrefix, pdbSuffix;
-    bool quiet;
-    try{
+    std::string inputFile, descriptionFolder, pdbPath, pdbPrefix = "", pdbSuffix = "";
+    bool quiet, createFiles;
+    try{    //parsing command line arguments and assiging to variables
         cmdArg.parse(argc, argv);
-        if(inputFileArg.isSet()){ inputFile = inputFileArg.getValue(); }
-        else if(descriptionFolderArg.isSet()){ descriptionFolder = descriptionFolderArg.getValue(); };
+        if(inputFileArg.isSet()){ inputFile = inputFileArg.getValue(); createFiles = true; }
+        else if(descriptionFolderArg.isSet()){ descriptionFolder = descriptionFolderArg.getValue(); createFiles = false; };
         pdbPath = pdbFolderArg.getValue();
         if(prefixArg.isSet()){ pdbPrefix = prefixArg.getValue(); };
         if(suffixArg.isSet()){ pdbSuffix = suffixArg.getValue(); };
@@ -35,46 +45,8 @@ int main(int argc, char *argv[]) {
     }catch(TCLAP::ArgException &e)  // catch exceptions
 	{ std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1; }
 
-    if(argc < 2){ std::cerr << "Insufficient arguments. Exiting \n"; return 1;}
-    else{
-        std::string fileName = argv[1],
-                    dataPath = argv[2];
-        
-        int total = 0;
-        std::ifstream is(fileName);
-        if(!is.good()){ std::cerr << "Cannot open file. Exiting \n"; return 2; }
-        std::string s;
-        while(std::getline(is, s)){
-            int num;
-            std::string barcode;
-            std::istringstream ss(s);
-            ss >> num;
-            if(num > 1){
-                if(!total){
-                    if(mkdir("description_files",0775) == -1){ std::cerr << "Cannot create folder. Exiting \n"; return 3;}
-                }
-                ss >> barcode;
-                barcode.erase(remove(barcode.begin(), barcode.end(), '"'), barcode.end());
-                
-                std::string tmpFileName = "description_files/" + barcode;
-                std::ofstream os(tmpFileName);
-                if(!os.good()){ std::cerr << "Cannot create file. Exiting \n"; return 4;}
-                os << ">" << dataPath << "\n";
-                for(int i=0; i < num; i++){
-                    std::string tmpSequence, sequence, desc; 
-                    int amm;
-                    ss >> sequence >> desc >> amm;
-                    sequence.erase(remove(sequence.begin(), sequence.end(), ','), sequence.end());
-                    tmpSequence = sequence + ".pdb";
-                    os << "+" << tmpSequence << "\n";
-                }
-                os.close();
-                std::cout << "Successfully created file \"" << barcode << "\"\n";
-                total++;
-            }
-        }
-        std::cout << "Created " << total << " files. Exiting \n";
-        return 0;
+    if(createFiles){    //if -i option is provided, proceed to read .txt file and create description file accordingly
+        am::readAndCreate(inputFile, pdbPath, pdbPrefix, pdbSuffix, quiet);
     }
-
+    return 0;
 }
