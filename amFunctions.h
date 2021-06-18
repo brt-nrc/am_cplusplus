@@ -18,7 +18,16 @@
 
 namespace fs = std::filesystem;
 namespace am{
-    int readAndCreate(std::string fileName, std::string pdbPath, std::string pdbPrefix, std::string pdbSuffix, bool quiet){
+
+    bool fileExists(const std::string fileName, const std::string Path){
+        fs::path tmpPath = Path;
+        tmpPath /= fileName;
+        return fs::exists(tmpPath);
+    }
+
+
+
+    int readAndCreate(const std::string fileName, const std::string pdbPath, const std::string pdbPrefix, const std::string pdbSuffix, const bool quiet){
 
         /************************************************************************************************************************
         * Creates description files for Mustang alignment. Reads an input .txt file (fileName) and creates a directory that will be filled
@@ -28,6 +37,7 @@ namespace am{
         * -1 : fileName read error
         * -2 : Folder creation error
         * -3 : descriptor file creation error
+        * -4 : file .pdb not found
         *************************************************************************************************************************
         TO DO:
         - Verificare l'esistenza dei file .pdb
@@ -84,8 +94,14 @@ namespace am{
                     ss >> sequence >> desc >> amm;                                          //exctracting info from file
                     sequence.erase(remove(sequence.begin(), sequence.end(), ','), sequence.end());  //removing commas from sequences names
                     std::string tmpSequence = pdbPrefix + sequence + pdbSuffix + ".pdb";            //creating the name of the sequence, adding prefix and suffix if specified 
-                    /********************************************* TO DO: verificare l'esistenza dei file .pdb ******************/
-                    os << "+" << tmpSequence << "\n";                                       //outputting the sequence filename to descript file, identified byb plus char as MUSTANG's spec
+                    if(fileExists(tmpSequence, pdbPath)){                                   //checks whether .pdb file exists in the path specified
+                        os << "+" << tmpSequence << "\n";                                   //if it does, outputting the sequence filename to descript file, identified byb plus char as MUSTANG's spec
+                    }else{
+                        std::cerr << "File " << pdbPath << "/" << tmpSequence << " not found. Exiting \n";  //if it doesn't, error
+                        os.close();
+                        fs::remove_all(directoryName);
+                        return -4;
+                    }
                 }
                 os.close();                                                                 //close file
                 if(!quiet){ std::cout << "Successfully created file \"" << barcode << "\"\n"; } 

@@ -45,8 +45,10 @@ int main(int argc, char** argv) {
     }catch(TCLAP::ArgException &e)  // catch exceptions
 	{ std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1; }
 
+
     if(createFiles){    //if -i option is provided, proceed to read .txt file and create description file accordingly
         am::readAndCreate(inputFile, pdbPath, pdbPrefix, pdbSuffix, quiet);
     }
+    
     return 0;
 }
