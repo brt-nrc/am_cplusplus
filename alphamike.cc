@@ -8,9 +8,10 @@
 #include<sys/stat.h>
 #include<sys/types.h>
 #include"alphamike.h"
+#include"CmdLine.h"
 
 int main(int argc, char *argv[]) {
- /*   TCLAP::CmdLine cmdArg("Command description message", ' ', "0.1");
+   TCLAP::CmdLine cmdArg("Command description message", ' ', "0.1");
     TCLAP::ValueArg<std::string> inputFileArg("i", "input_file", "File with barcodes", false, "", "filename");
     TCLAP::ValueArg<std::string> descriptionFolderArg("f", "description_files", "Folder with descriptor files", false, "", "folder path");
     TCLAP::OneOf inputArg;
@@ -32,9 +33,9 @@ int main(int argc, char *argv[]) {
         if(suffixArg.isSet()){ pdbSuffix = suffixArg.getValue(); };
         quiet = quietArg.getValue();
     }catch(TCLAP::ArgException &e)  // catch exceptions
-	{ std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1; } */
+	{ std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1; }
 
-    if(argc < 2){ std::cerr << "Argomenti mancanti"; return 1;}
+    if(argc < 2){ std::cerr << "Insufficient arguments. Exiting \n"; return 1;}
     else{
         std::string fileName = argv[1],
                     dataPath = argv[2];
@@ -50,11 +51,12 @@ int main(int argc, char *argv[]) {
             ss >> num;
             if(num > 1){
                 if(!total){
-                    if(mkdir("files",0775) == -1){ std::cerr << "Cannot create folder. Exiting \n"; return 3;}
+                    if(mkdir("description_files",0775) == -1){ std::cerr << "Cannot create folder. Exiting \n"; return 3;}
                 }
                 ss >> barcode;
                 barcode.erase(remove(barcode.begin(), barcode.end(), '"'), barcode.end());
-                std::string tmpFileName = "files/" + barcode;
+                
+                std::string tmpFileName = "description_files/" + barcode;
                 std::ofstream os(tmpFileName);
                 if(!os.good()){ std::cerr << "Cannot create file. Exiting \n"; return 4;}
                 os << ">" << dataPath << "\n";
@@ -67,12 +69,11 @@ int main(int argc, char *argv[]) {
                     os << "+" << tmpSequence << "\n";
                 }
                 os.close();
-                std::cout << "Successfully created file" << tmpFileName << "\n";
+                std::cout << "Successfully created file \"" << barcode << "\"\n";
                 total++;
             }
         }
-
-        std::cout << "Created" << total << "files. Exiting \n";
+        std::cout << "Created " << total << " files. Exiting \n";
         return 0;
     }
 
